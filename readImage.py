@@ -23,6 +23,7 @@ def resizeImage(imageName):
 # load all images in direc
 def loadImageFromFile(directory):
     loaded_images = list()
+    image_names = list()
     for filename in listdir(directory):
         if filename == '.DS_Store':
             continue
@@ -31,19 +32,31 @@ def loadImageFromFile(directory):
         img_data = np.asarray(resized_image)
         # store loaded image
         loaded_images.append(img_data)
+        image_names.append(filename)
         # print('> loaded %s %s' % (filename, img_data.shape))
-    return loaded_images
+    return loaded_images, image_names
 
-def readPixel(image):
+def to2dArray(image):
     # matrix = [[0 for x in range(image.shape[0])] for y in range(image.shape[1])] 
     # matrix = np.array([[]])
     # print(matrix.size)
+    data = list()
     for x in range(image.shape[0]):
         for y in range(image.shape[1]):
-            print(image[x,y])
+            data.append(image[x,y])
+    return data
 
-    # print(matrix)
+def from2dArrayToImage(list_):
+    list_ = np.array(list_).reshape(-1, 3)
+    image_data = np.array(list_).reshape(256, 256, 3)
+    image = Image.fromarray(image_data.astype(np.uint8))
+    return image
 
 # if __name__ == "__main__":
 #     # resizeImage('images/8A0000.jpg')
-#     loadImageFromFile('images')
+#     loaded_image = loadImageFromFile('images')
+    
+#     data = to2dArray(loaded_image[0])
+#     # print(data[0])
+#     image = from2dArrayToImage(data)
+#     image.show()
