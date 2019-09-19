@@ -36,15 +36,24 @@ def loadImageFromFile(directory):
         # print('> loaded %s %s' % (filename, img_data.shape))
     return loaded_images, image_names
 
+# def to2dArray(image):
+#     # matrix = [[0 for x in range(image.shape[0])] for y in range(image.shape[1])] 
+#     # matrix = np.array([[]])
+#     # print(matrix.size)
+#     data = list()
+#     for x in range(image.shape[0]):
+#         for y in range(image.shape[1]):
+#             data.append(image[x,y])
+#     return data
+
 def to2dArray(image):
-    # matrix = [[0 for x in range(image.shape[0])] for y in range(image.shape[1])] 
-    # matrix = np.array([[]])
-    # print(matrix.size)
-    data = list()
-    for x in range(image.shape[0]):
-        for y in range(image.shape[1]):
-            data.append(image[x,y])
-    return data
+    array = np.asarray(image)
+    array = array.reshape(image.shape[0]*image.shape[1], image.shape[2])
+    return array
+
+def normalizeData(data):
+    array = np.true_divide(data, 255)
+    return array
 
 def from2dArrayToImage(list_):
     list_ = np.array(list_).reshape(-1, 3)
@@ -54,9 +63,11 @@ def from2dArrayToImage(list_):
 
 # if __name__ == "__main__":
 #     # resizeImage('images/8A0000.jpg')
-#     loaded_image = loadImageFromFile('images')
+#     loaded_image, image_names = loadImageFromFile('images')
     
 #     data = to2dArray(loaded_image[0])
-#     # print(data[0])
-#     image = from2dArrayToImage(data)
-#     image.show()
+#     print(data[0])
+#     data = normalizeData(data)
+#     print(data[0])
+#     # image = from2dArrayToImage(data)
+#     # image.show()

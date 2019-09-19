@@ -1,8 +1,12 @@
 import numpy as np
+import random
 import operator
-x = 0
-def distance(x, y):
-    return np.linalg.norm(list(map(operator.sub, x, y)))
+import math
+from copy import deepcopy
+import time
+import csv
 
-a = 9
-print(np.square(a))
+def func(x):
+    return 1 - x - np.square(1-np.sqrt(x))
+
+print(func(1.12))
