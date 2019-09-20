@@ -1,12 +1,4 @@
 import numpy as np
-import random
-import operator
-import math
-from copy import deepcopy
-import time
-import csv
-
-def func(x):
-    return 1 - x - np.square(1-np.sqrt(x))
-
-print(func(1.12))
+a = np.array([2,3,4,5])
+result = np.where(a == np.amax(a))
+print(result[0][0])

@@ -13,7 +13,7 @@ loaded_images = list()
 num_attr = 3 
 
 #number of cluster 
-k = 2
+k = 5
 
 # Maximum number of iterations
 MAX_ITER = 100
@@ -55,7 +55,7 @@ def check2(list_):
 
 def init_membership_values():
     #Each data point
-    membership_values_list = list()
+    membership_values_list = np.array()
     random_e_list = list()
     random_n_list = list()
 
