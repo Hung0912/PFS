@@ -1,4 +1,6 @@
 import numpy as np
-a = np.array([2,3,4,5])
-result = np.where(a == np.amax(a))
-print(result[0][0])
+
+m = np.arange(8).reshape(5,3,2)
+n = np.arange(8).reshape(5,3,2)
+
+print(np.linalg.norm(m-n, axis=(1,2)))

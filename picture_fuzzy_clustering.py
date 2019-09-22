@@ -147,12 +147,42 @@ def PFS(data):
         print("time: %0.2fs" %(toc-tic))
     return membership_matrix, cluster_centers
 
+def writeMatrixToCsv(filename, matrix):
+    with open('results/' + filename, "w+") as f:
+        csv_write = csv.writer(f, delimiter = ',')
+        for i in range(matrix.shape[0]):
+            csv_write.writerows(matrix[i])
+
+def writeToCsv(filename, matrix):
+    with open('results/' + filename, "w+") as f:
+        csv_write = csv.writer(f, delimiter = ',')
+        csv_write.writerows(matrix)
+
 if __name__ == "__main__":
-    data = readImage('images/8A0000.jpg')
-    result_membership_matrix, result_cluster_centers = PFS(data)
-    after_data = afterClusterData(data, result_membership_matrix, result_cluster_centers)
-    print(result_membership_matrix)
-    image = vector2Image(after_data)
-    image.save('8A0000' + "_after" + ".jpg")
+    # data = readImage('images/8A0000.jpg')
+    # result_membership_matrix, result_cluster_centers = PFS(data)
+    # after_data = afterClusterData(data, result_membership_matrix, result_cluster_centers)
+    # image = vector2Image(after_data)
+    # image.save('8A0000' + "_after" + ".jpg")
+    loaded_images, image_names = loadImageFromFile('images')
+    file_path = 'results/'
+    for (index, loaded_image) in enumerate(loaded_images):
+        data = loaded_image
+        start_time = time.time()
+        print("Processing image %d %s" % (index, image_names[index]))
+        # data = normalizeData(data)
+        result_membership_matrix, result_cluster_centers = PFS(data)
+        after_data = afterClusterData(data, result_membership_matrix, result_cluster_centers)
+        image = vector2Image(after_data)
+        image_name = image_names[index][:-4]
+        image.save( file_path + image_name + "_after" + ".jpg")
+        end_time = time.time()
+        duration =  end_time - start_time
+        print("Excecute time image %s: %.6fs" % (image_names[index], duration))
+
+        writeMatrixToCsv(image_name + '_matrix' + '.csv', result_membership_matrix)
+        writeToCsv(image_name + '_cluster_center' + '.csv', result_cluster_centers)
+        
+    
 
     
