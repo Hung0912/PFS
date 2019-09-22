@@ -11,7 +11,7 @@ import time
 k = 5
 
 # Maximum number of iterations
-MAX_ITER = 100
+MAX_ITER = 200
 
 # Fuzzy parameter
 m = 2.00
@@ -24,7 +24,9 @@ n = 256 * 256
 alpha = 0.5
 
 # Threshold
-thres = 0.005
+thres = 0.001
+
+file_path = 'results/'
 
 def random_with_sum(suma):
     a = np.random.rand(k,1)
@@ -101,13 +103,19 @@ def updateMembershipMatrix(matrix, cluster_centers):
     n_matrix = a * (c / b).reshape(n,1)
     
     #cal new u matrix
-    for i in range(n):
-        x = data[i]
-        norms = [norm(x, cluster_centers[j]) for j in range(k)]
-        for j in range(k):
-            # new u
-            den = sum([ (2 - e_matrix[i,j]) * np.power( (norms[j] / norms[c] ) , p) for c in range(k) ])
-            u_matrix[i][j] = 1/den
+    # for i in range(n):
+    #     x = data[i]
+    #     norms = [norm(x, cluster_centers[j]) for j in range(k)]
+    #     for j in range(k):
+    #         # new u
+    #         den = sum([ (2 - e_matrix[i,j]) * np.power( (norms[j] / norms[c] ) , p) for c in range(k) ])
+    #         u_matrix[i][j] = 1/den
+    x = np.repeat(data, k, axis= 0)
+    v = np.vstack([cluster_centers] * n)
+    a = np.linalg.norm(x-v, axis= 1).reshape((n,k))
+    b = (2 - e_matrix) * (a ** p) * np.sum(1/(a ** p), axis= 1).reshape(n,1)
+    u_matrix = 1 / b
+
 
     #cal new e matrix
     e_matrix = 1 - (u_matrix + n_matrix) - (1-(u_matrix + n_matrix)**alpha)**(1/alpha)
@@ -147,14 +155,14 @@ def PFS(data):
         print("time: %0.2fs" %(toc-tic))
     return membership_matrix, cluster_centers
 
-def writeMatrixToCsv(filename, matrix):
-    with open('results/' + filename, "w+") as f:
+def save_membership_matrixs(filename, matrix):
+    with open(file_path + 'membership_matrixs/'  + filename, "w+") as f:
         csv_write = csv.writer(f, delimiter = ',')
         for i in range(matrix.shape[0]):
             csv_write.writerows(matrix[i])
 
-def writeToCsv(filename, matrix):
-    with open('results/' + filename, "w+") as f:
+def save_cluster_centers(filename, matrix):
+    with open(file_path + 'cluster_centers/' + filename, "w+") as f:
         csv_write = csv.writer(f, delimiter = ',')
         csv_write.writerows(matrix)
 
@@ -165,7 +173,6 @@ if __name__ == "__main__":
     # image = vector2Image(after_data)
     # image.save('8A0000' + "_after" + ".jpg")
     loaded_images, image_names = loadImageFromFile('images')
-    file_path = 'results/'
     for (index, loaded_image) in enumerate(loaded_images):
         data = loaded_image
         start_time = time.time()
@@ -175,13 +182,13 @@ if __name__ == "__main__":
         after_data = afterClusterData(data, result_membership_matrix, result_cluster_centers)
         image = vector2Image(after_data)
         image_name = image_names[index][:-4]
-        image.save( file_path + image_name + "_after" + ".jpg")
+        image.save( file_path + 'images/' + image_name + "_after" + ".jpg")
         end_time = time.time()
         duration =  end_time - start_time
         print("Excecute time image %s: %.6fs" % (image_names[index], duration))
 
-        writeMatrixToCsv(image_name + '_matrix' + '.csv', result_membership_matrix)
-        writeToCsv(image_name + '_cluster_center' + '.csv', result_cluster_centers)
+        save_membership_matrixs(image_name + '_matrix' + '.csv', result_membership_matrix)
+        save_cluster_centers(image_name + '_cluster_center' + '.csv', result_cluster_centers)
         
     
 

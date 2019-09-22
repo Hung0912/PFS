@@ -1,6 +1,7 @@
 import numpy as np
-
-m = np.arange(8).reshape(5,3,2)
-n = np.arange(8).reshape(5,3,2)
-
-print(np.linalg.norm(m-n, axis=(1,2)))
+n = 256*256
+k= 5
+data = np.zeros((n,3))
+cluster_centers = np.ones((n,1))
+x = data / cluster_centers
+print(x.shape)
