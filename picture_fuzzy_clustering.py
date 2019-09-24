@@ -8,10 +8,10 @@ import csv
 import time
 
 #number of cluster 
-k = 5
+k = 10
 
 # Maximum number of iterations
-MAX_ITER = 200
+MAX_ITER = 1000
 
 # Fuzzy parameter
 m = 2.00
@@ -102,14 +102,6 @@ def updateMembershipMatrix(matrix, cluster_centers):
     c = 1 - np.sum(e_matrix,axis= 1) / 5
     n_matrix = a * (c / b).reshape(n,1)
     
-    #cal new u matrix
-    # for i in range(n):
-    #     x = data[i]
-    #     norms = [norm(x, cluster_centers[j]) for j in range(k)]
-    #     for j in range(k):
-    #         # new u
-    #         den = sum([ (2 - e_matrix[i,j]) * np.power( (norms[j] / norms[c] ) , p) for c in range(k) ])
-    #         u_matrix[i][j] = 1/den
     x = np.repeat(data, k, axis= 0)
     v = np.vstack([cluster_centers] * n)
     a = np.linalg.norm(x-v, axis= 1).reshape((n,k))
@@ -167,11 +159,6 @@ def save_cluster_centers(filename, matrix):
         csv_write.writerows(matrix)
 
 if __name__ == "__main__":
-    # data = readImage('images/8A0000.jpg')
-    # result_membership_matrix, result_cluster_centers = PFS(data)
-    # after_data = afterClusterData(data, result_membership_matrix, result_cluster_centers)
-    # image = vector2Image(after_data)
-    # image.save('8A0000' + "_after" + ".jpg")
     loaded_images, image_names = loadImageFromFile('images')
     for (index, loaded_image) in enumerate(loaded_images):
         data = loaded_image
@@ -190,6 +177,3 @@ if __name__ == "__main__":
         save_membership_matrixs(image_name + '_matrix' + '.csv', result_membership_matrix)
         save_cluster_centers(image_name + '_cluster_center' + '.csv', result_cluster_centers)
         
-    
-
-    
