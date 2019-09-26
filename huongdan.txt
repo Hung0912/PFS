@@ -1,0 +1,18 @@
+Yêu cầu: đã cài đặt python3. pip3 tương ứng.
+
+Tải về và unzip
+Sau khi unzip, trong thư mục sẽ có:
+    - thư mục images/ chứa file ảnh đầu vào
+    - thư mục results/ chứa kết quả ra bao gồm (images: ảnh ra, membership_matrixs: biểu diễn độ thuộc, cluster_centers: các cluster center cuối cùng)
+    - .py là code python
+
+Các bước chạy:
+    - Nếu có IDE(sublime, visual studio code) thì dùng ide để mở project thư mục vừa unzip, rồi vào terminal của ide đó.
+    Hoặc nếu không có thể dùng terminal luôn của máy cd đến thư mục project.( nhớ là đã có cài python và pip rồi ạ)
+    - Chương trình main nằm ở picture_fuzzy_clustering.py, ta chỉ cần chạy file này thôi ạ:
+        + Vào terminal gõ: "python picture_fuzzy_clustering.py" (hoặc "python3 picture_fuzzy_clustering.py")
+        + Nếu thiếu thư viện thì gõ: "pip install -r requirement.txt" (hoặc "pip3 install -r requirement.txt") trước
+    
+    - Chạy thành công: kết quả sẽ lưu ở file results ạ
+        
+

@@ -4,7 +4,7 @@ import cv2
 import numpy as np
 
 def box_extraction(img_for_box_extraction_path, cropped_dir_path):
-    img = cv2.imread(img_for_box_extraction_path, 0)  # Read the image
+    img = cv2.imread(img_for_box_extraction_path, 0)
     (thresh, img_bin) = cv2.threshold(img, 128, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)  # Thresholding the image
     img_bin = 255-img_bin  # Invert the image
     cv2.imwrite("Image_bin.jpg",img_bin)
@@ -39,14 +39,25 @@ def box_extraction(img_for_box_extraction_path, cropped_dir_path):
     # Find contours for image, which will detect all the boxes
     contours, hierarchy = cv2.findContours(img_final_bin, cv2.RETR_TREE, cv2.CHAIN_APPROX_SIMPLE)
     # Sort all the contours by top to bottom.
-    idx = 0
     for c in contours:
         # Returns the location and width,height for every contour
         x, y, w, h = cv2.boundingRect(c)
         # If the box height is greater then 20, widht is >80, then only save it as a box in "cropped/" folder.
-        if (w > 15 and h > 15) and w > 3*h:
-            idx += 1
-            new_img = img[y:y+h, x:x+w]
-            cv2.imwrite(cropped_dir_path+str(idx) + '.png', new_img)
+        # if (w > 15 and h > 15) and w > 3*h:
+        #     idx += 1
+        #     new_img = img[y:y+h, x:x+w]
+        #     cv2.imwrite(cropped_dir_path+str(idx) + '.png', new_img)
 
-box_extraction("test2.jpg", "./Cropped/")
+
+def extract_box(image):
+    img = cv2.imread(image, 1)
+    img = cv2.resize(img, (256,256))
+    gray = cv2.cvtColor(img,cv2.COLOR_BGR2GRAY)
+ 
+    cv2.imshow('test',img)
+    cv2.waitKey(0)
+
+
+
+# box_extraction("test2.jpg", "./Cropped/")
+extract_box('test.jpg')
