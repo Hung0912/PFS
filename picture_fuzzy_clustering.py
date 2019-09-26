@@ -8,7 +8,7 @@ import csv
 import time
 
 #number of cluster 
-k = 10
+k = 8
 
 # Maximum number of iterations
 MAX_ITER = 1000
@@ -18,13 +18,13 @@ m = 2.00
 p = float(2/(m-1))
 
 # Number of data points = so diem anh pixel
-n = 256 * 256
+n = 0
 
 # exponent
 alpha = 0.5
 
 # Threshold
-thres = 0.001
+thres = 0.005
 
 file_path = 'results/'
 
@@ -58,7 +58,7 @@ def init_membership_values():
 
     
 def init_membership_matrix():
-    membership_matrix = np.zeros((n,5,3))
+    membership_matrix = np.zeros((n,k,3))
     for i in range(n):
         membership_matrix[i] = init_membership_values()
     # # print(membership_matrix)
@@ -80,11 +80,11 @@ def distance_matrix(matrix1, matrix2):
     return norm(u_matrix1,u_matrix2) + norm(e_matrix1,e_matrix2) + norm(n_matrix1,n_matrix2)
 
 
-def calculateClusterCenter(matrix, data):
+def calculateClusterCenter(matrix, data, n, k):
     u_matrix = matrix[:,:,0]
     e_matrix = matrix[:,:,2]
 
-    a = ((u_matrix*(2-e_matrix)) ** m).reshape(n,5,1)
+    a = ((u_matrix*(2-e_matrix)) ** m).reshape(n,k,1)
     b = a * data.reshape(n,1,3)
     tuso = np.sum(b,axis = 0)
     mauso = np.sum(a,axis = 0)
@@ -99,7 +99,7 @@ def updateMembershipMatrix(matrix, cluster_centers):
     #cal new n matrix
     a = np.exp(-e_matrix)
     b = np.sum(np.exp(-e_matrix),axis= 1)
-    c = 1 - np.sum(e_matrix,axis= 1) / 5
+    c = 1 - np.sum(e_matrix,axis= 1) / k
     n_matrix = a * (c / b).reshape(n,1)
     
     x = np.repeat(data, k, axis= 0)
@@ -120,7 +120,7 @@ def updateMembershipMatrix(matrix, cluster_centers):
 
 def afterClusterData(data, membership_mat, cluster_centers):
     result_data = np.zeros(shape=(n, 3))
-    positive = membership_mat[:,:,0]
+    positive = membership_mat[:,:,0] * (2 - membership_mat[:,:,2])
     for i in range(n):
         a = positive[i]
         result = np.where(a == np.amax(a))
@@ -135,7 +135,7 @@ def PFS(data):
         tic = time.time()
         print("Current iter:", curr)
         membership_matrix_old = deepcopy(membership_matrix)
-        cluster_centers = calculateClusterCenter(membership_matrix, data)
+        cluster_centers = calculateClusterCenter(membership_matrix, data, n, k)
         membership_matrix = updateMembershipMatrix(membership_matrix, cluster_centers)
         dis = distance_matrix(membership_matrix_old, membership_matrix)
         print("Current distance:", dis)
@@ -161,19 +161,20 @@ def save_cluster_centers(filename, matrix):
 if __name__ == "__main__":
     loaded_images, image_names = loadImageFromFile('images')
     for (index, loaded_image) in enumerate(loaded_images):
+        
         data = loaded_image
+        n = data.shape[0]
         start_time = time.time()
         print("Processing image %d %s" % (index, image_names[index]))
         # data = normalizeData(data)
         result_membership_matrix, result_cluster_centers = PFS(data)
         after_data = afterClusterData(data, result_membership_matrix, result_cluster_centers)
-        image = vector2Image(after_data)
+        image = data2Image(after_data.reshape((384,512,3)))
         image_name = image_names[index][:-4]
         image.save( file_path + 'images/' + image_name + "_after" + ".jpg")
         end_time = time.time()
         duration =  end_time - start_time
         print("Excecute time image %s: %.6fs" % (image_names[index], duration))
 
-        save_membership_matrixs(image_name + '_matrix' + '.csv', result_membership_matrix)
-        save_cluster_centers(image_name + '_cluster_center' + '.csv', result_cluster_centers)
-        
+        save_membership_matrixs(image_name + '.csv', result_membership_matrix)
+        save_cluster_centers(image_name + '.csv', result_cluster_centers)

@@ -1,26 +1,12 @@
 import sys
 sys.path.append('/usr/local/lib/python3.7/site-packages')
-import cv2
+import csv
 import numpy as np
-
-im = cv2.imread('test.jpg')
-# im[im == 255] = 1
-# im[im == 0] = 255
-# im[im == 1] = 0
-im2 = cv2.cvtColor(im,cv2.COLOR_BGR2GRAY)
-cv2.imshow('test',im2)
-cv2.waitKey(0)
-ret,thresh = cv2.threshold(im2,127,255,0)
-contours, hierarchy = cv2.findContours(thresh,cv2.RETR_TREE,cv2.CHAIN_APPROX_SIMPLE)
-print(len(contours))
-# for i in range(0, len(contours)):
-#     if (i % 2 == 0):
-#        cnt = contours[i]
-#        #mask = np.zeros(im2.shape,np.uint8)
-#        #cv2.drawContours(mask,[cnt],0,255,-1)
-#        x,y,w,h = cv2.boundingRect(cnt)
-#        cv2.rectangle(im,(x,y),(x+w,y+h),(0,255,0),2)
-#        cv2.imshow('Features', im)
-#        cv2.imwrite('results\images\' + str(i)+'.png', im)
-
-cv2.destroyAllWindows()
+n = 512*384
+k = 8
+matrix = np.zeros((n*k,3))
+with open('results/membership_matrixs/8C0189 (3).csv') as f:
+    readCSV = csv.reader(f, delimiter = ',')
+    matrix = np.array(list(readCSV)).astype("float")
+    
+print(matrix.reshape((384,512,k,3)).shape)
