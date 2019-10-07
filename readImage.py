@@ -44,6 +44,10 @@ def data2Image(data):
     image = Image.fromarray(image_data.astype(np.uint8))
     return image
 
+def data2ImageGS(data):
+    result = np.reshape(data, (384,512))
+    image = Image.fromarray(np.uint8((1 - result) * 255), 'L')
+    return image
 # data = readImage('test.jpg')
 # data = data.reshape((384,512,3))
 # image = data2Image(data)
