@@ -5,7 +5,5 @@ import numpy as np
 
 from PIL import Image
 
-x = [1 , 0.5, 2, 0.4, 0.1, 1.5]
-y = np.reshape(x, (2,3))
-y[y >1] = 1
-print(y)
+x = np.array([ 1, 2, 3])
+print(type(x))

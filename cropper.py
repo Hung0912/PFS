@@ -5,6 +5,7 @@ import numpy as np
 import csv
 from readImage import *
 from picture_fuzzy_clustering import n,k
+
 size = (512,384)
 n = size[0] * size[1]
 
@@ -23,6 +24,7 @@ def cropper():
     loaded_images, image_names = loadImageFromFile('images')
     with open('crop.csv') as f:
         readCSV = csv.reader(f, delimiter = ',')
+        i = 0
         for row in readCSV:
             index = int(row[4])
             x = int(int(row[0]) / 5)
@@ -32,24 +34,24 @@ def cropper():
             data = loaded_images[index]
             cropped_data = data.reshape(size[1],size[0],3)[y:y+height,x:x+width,:]
             cropped_datas.append(cropped_data)
+
             matrix = read_matrixCSV(image_names[index])
             cropped_matrix = matrix[y:y+height,x:x+width,:,:]
-            print(cropped_matrix.shape)
             cropped_matrixs.append(cropped_matrix)
+            # print(cropped_matrix.shape)
+            save_cropper(cropped_data, cropped_matrix, i)
+            i += 1
     print("crop done!")
     return cropped_datas, cropped_matrixs
     
-# def save_cropper_toCSV(datas, matrixs):
-#     with open('cropper/' + 'datas.csv', "w+") as f:
-#         csv_write = csv.writer(f, delimiter = ',')
-#         for i in range(len(datas)):
-#             csv_write.writerows(datas[i])
-    
-#     with open('cropper/' + 'matrixs.csv', "w+") as f:
-#         csv_write = csv.writer(f, delimiter = ',')
-#         for i in range(len(matrixs)):
-#             csv_write.writerows(matrixs[i])
+def save_cropper(data, matrix, i):
+    image = data2Image(data)
+    image.save('cropper/datas/crop' + str(i) + '.jpg')
+    matrix = np.reshape(matrix, (matrix.shape[0] * matrix.shape[1], matrix.shape[2], matrix.shape[3]))
+    with open( 'cropper/matrixs/' + str(i) + '.csv', "w+") as f:
+        csv_write = csv.writer(f, delimiter = ',')
+        for j in range(matrix.shape[0]):
+            csv_write.writerows(matrix[j])
 
-# if __name__ == "__main__":
-#     datas, matrixs = cropper()
-#     save_cropper_toCSV(datas, matrixs)
+if __name__ == "__main__":
+    datas, matrixs = cropper()
