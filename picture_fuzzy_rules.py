@@ -3,9 +3,14 @@ import random
 import operator
 import math
 from picture_fuzzy_clustering import *
-from cropper import *
 from readImage import readImage
 from PIL import Image
+import argparse
+
+ap = argparse.ArgumentParser()
+ap.add_argument("-i", "--input", type=str,
+                help="path to input image")
+args = vars(ap.parse_args())
 
 K = 8
 
@@ -181,4 +186,8 @@ def main(image_name):
 
 
 if __name__ == "__main__":
-    main('images/8C0190 (1).jpg')
+    input_path = args["input"]
+    if input_path is not None:
+        main(input_path)
+    else:
+        print("Need input file path!")

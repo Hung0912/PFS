@@ -2,17 +2,32 @@ Yêu cầu: đã cài đặt python3. pip3 tương ứng.
 
 Tải về và unzip
 Sau khi unzip, trong thư mục sẽ có:
-    - thư mục images/ chứa file ảnh đầu vào
-    - thư mục results/ chứa kết quả ra bao gồm (images: ảnh ra, membership_matrixs: biểu diễn độ thuộc, cluster_centers: các cluster center cuối cùng)
-    - .py là code python
+    - thư mục images/ chứa file ảnh đầu vào cho phân cụm picture fuzzy clustering
+    - thư mục results/ chứa kết quả phân cụm các ảnh đầu vào bao gồm (images: ảnh đã phân cụm, membership_matrixs: biểu diễn độ thuộc, cluster_centers: các cluster center cuối cùng)
+    - thư mục cropper/ gồm 2 thư mục:
+        + datas/ : chứa khu vực ảnh bị bệnh crop từ ảnh gốc trong images/
+        + matrixs/: các ma trận thuộc tương ứng với từng khu vực ảnh
+    - thư mục images_test: chứa các ảnh mẫu
 
 Các bước chạy:
     - Nếu có IDE(sublime, visual studio code) thì dùng ide để mở project thư mục vừa unzip, rồi vào terminal của ide đó.
     Hoặc nếu không có thể dùng terminal luôn của máy cd đến thư mục project.( nhớ là đã có cài python và pip rồi ạ)
-    - Chương trình main nằm ở picture_fuzzy_clustering.py, ta chỉ cần chạy file này thôi ạ:
-        + Vào terminal gõ: "python picture_fuzzy_clustering.py" (hoặc "python3 picture_fuzzy_clustering.py")
-        + Nếu thiếu thư viện thì gõ: "pip install -r requirement.txt" (hoặc "pip3 install -r requirement.txt") trước
+    - update thư viện:
+        + Nếu thiếu thư viện thì gõ: "pip install -r requirement.txt" (hoặc "pip3 install -r requirement.txt")
     
-    - Chạy thành công: kết quả sẽ lưu ở file results ạ
+    - Chạy các file code theo từng bước:
+        + chạy picture_fuzzy_clustering.py: thực hiện phân cụm các ảnh trong images/ sau khi chạy xong kết quả lưu ở results/
+            'python picture_fuzzy_clustering.py'
+        + chạy cropper.py: toạ độ các ảnh bị đánh dấu nhiễm bệnh lưu ở crop.csv, cropper.py sẽ theo đó crop các khu vực ảnh ra 
+        lưu vào cropper/datas/ sau đó cũng tính toán ma trận thuộc tương ứng với lưu vào cropper/matrixs/
+            'python cropper.py'
+        + chạy picture_fuzzy_rules.py: từ kết quả của cropper, tạo ra các luật mờ theo hàm mờ trực quan tam giác, 
+        sau đó với input ảnh đầu vào bất kỳ ta sẽ ra 2 kết quả:
+            - max_result.jpg: ảnh đầu ra tính theo giá trị lớn nhất độ thuộc của tất cả luật với từng pixels
+            - mean_result.jpg: ảnh đầu ra tính theo giá trị trung bình độ thuộc của tất cả luật với từng pixels
+
+            "python picture_fuzzy_rules.py -i 'images/8C0190 (1).jpg"
+
+
         
 
