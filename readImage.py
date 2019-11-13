@@ -4,6 +4,7 @@ from PIL import Image
 from os import listdir
 
 size = (0,0)
+
 def readImage(image_name):
     image = Image.open(image_name)
     size = (int(image.size[0]/5), int(image.size[1]/5))

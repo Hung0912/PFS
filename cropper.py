@@ -4,18 +4,15 @@ import cv2
 import numpy as np
 import csv
 from readImage import *
-from picture_fuzzy_clustering import n,k
+from picture_fuzzy_clustering import *
 
-size = (512,384)
-n = size[0] * size[1]
 
 def read_matrixCSV(image_name):
-    matrix = np.zeros((n*k,3))
+    matrix = np.zeros((n*K,3))
     with open('results/membership_matrixs/' + image_name[:-4] + '.csv') as f:
         readCSV = csv.reader(f, delimiter = ',')
         matrix = np.asarray(list(readCSV), dtype = float)
-    
-    return matrix.reshape((size[1],size[0],k,3))
+    return matrix.reshape((size[1],size[0],K,3))
 
 def cropper():
     cropped_datas = list()
@@ -32,9 +29,20 @@ def cropper():
             width = int(int(row[2])/5)
             height = int(int(row[3])/5)
             data = loaded_images[index]
-            cropped_data = data.reshape(size[1],size[0],3)[y:y+height,x:x+width,:]
-            cropped_datas.append(cropped_data)
+            tmp = np.zeros((384,512))
+            tmp[y:y+height,x:x+width] = 1
+            tmp = np.reshape(tmp,(384*512))
+            # print(tmp.shape)
+            # print(tmp)
+            with open( 'cropper/tmps/tmp' + str(i) + '.csv', "w+") as f:
+                csv_write = csv.writer(f, delimiter = ',')
+                csv_write.writerow(tmp)
 
+              
+            cropped_data = data.reshape(size[1],size[0],3)[y:y+height,x:x+width,:]
+            # print(cropped_data.shape)
+            cropped_datas.append(cropped_data)
+            
             matrix = read_matrixCSV(image_names[index])
             cropped_matrix = matrix[y:y+height,x:x+width,:,:]
             cropped_matrixs.append(cropped_matrix)
@@ -52,6 +60,6 @@ def save_cropper(data, matrix, i):
         csv_write = csv.writer(f, delimiter = ',')
         for j in range(matrix.shape[0]):
             csv_write.writerows(matrix[j])
-
+    
 if __name__ == "__main__":
     datas, matrixs = cropper()

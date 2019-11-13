@@ -18,6 +18,6 @@ def clear_files_in_folder(folder):
             print(e)
 
 if __name__ == "__main__":
-    clear_files_in_folder(images)
-    clear_files_in_folder(cluster_centers)
-    clear_files_in_folder(membership_matrixs)
+    clear_files_in_folder('cropper/datas/')
+    clear_files_in_folder('cropper/matrixs/')
+    clear_files_in_folder('cropper/tmps/')
