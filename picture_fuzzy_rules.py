@@ -198,10 +198,10 @@ def main(image_name):
     # print(defuzzy.shape)
     out = defuzzy[max_index].reshape(384,512,3)
     out_image = data2Image(out)
-    out_image.save('out.jpg')
+    out_image.save('output.jpg')
 
     #3.show
-    out_image.show()
+    # out_image.show()
 
 def main1(image_name):
     datas, matrixs = read_cropper()
