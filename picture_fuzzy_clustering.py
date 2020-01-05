@@ -8,7 +8,7 @@ import csv
 import time
 
 #number of cluster 
-K = 5
+K = 8
 
 # Maximum number of iterations
 MAX_ITER = 1000
@@ -92,7 +92,7 @@ def calculateClusterCenter(matrix, data, n, K):
     result = tuso / mauso
     return result
 
-def updateMembershipMatrix(matrix, cluster_centers):
+def updateMembershipMatrix(data, matrix, cluster_centers):
     u_matrix = matrix[:,:,0]
     n_matrix = matrix[:,:,1]
     e_matrix = matrix[:,:,2]
@@ -129,7 +129,7 @@ def afterClusterData(data, membership_mat, cluster_centers):
         result_data[i] = cluster_centers[index]
     return result_data
 
-def PFS(data):
+def PFC(data):
     membership_matrix = init_membership_matrix()
     curr = 0
     while curr <= MAX_ITER:
@@ -137,7 +137,7 @@ def PFS(data):
         print("Current iter:", curr)
         membership_matrix_old = deepcopy(membership_matrix)
         cluster_centers = calculateClusterCenter(membership_matrix, data, n, K)
-        membership_matrix = updateMembershipMatrix(membership_matrix, cluster_centers)
+        membership_matrix = updateMembershipMatrix(data, membership_matrix, cluster_centers)
         dis = distance_matrix(membership_matrix_old, membership_matrix)
         print("Current distance:", dis)
         if dis <= thres:
@@ -168,7 +168,7 @@ if __name__ == "__main__":
         start_time = time.time()
         print("Processing image %d %s" % (index, image_names[index]))
         # data = normalizeData(data)
-        result_membership_matrix, result_cluster_centers = PFS(data)
+        result_membership_matrix, result_cluster_centers = PFC(data)
         after_data = afterClusterData(data, result_membership_matrix, result_cluster_centers)
         image = data2Image(after_data.reshape((384,512,3)))
         image_name = image_names[index][:-4]

@@ -139,8 +139,8 @@ def max_rules(ms_matrix, N, L):
     result = np.amax(result, axis= 1)
     
     # show result grayscale image
-    # image = data2ImageGS(result)
-    # image.save('max_result.jpg')
+    image = data2ImageGS(result)
+    image.save('max_result.jpg')
     # image.show()
     return result
 
@@ -154,8 +154,8 @@ def mean_rules(ms_matrix, N, L):
     result = np.mean(result, axis= 1)
 
     # show result grayscale image
-    # image = data2ImageGS(result)
-    # image.save('mean_result.jpg')   
+    image = data2ImageGS(result)
+    image.save('mean_result.jpg')   
     # image.show()
     return result
 
@@ -233,10 +233,10 @@ def main1(image_name):
     mean_result = mean_rules(member_vals, N, L)
     image = data2ImageGS(max_result)
     image.save('max_result.jpg')
-    image.show(title= "max_result")
+    # image.show(title= "max_result")
     image = data2ImageGS(mean_result)
     image.save('mean_result.jpg')
-    image.show(title= "mean_result")
+    # image.show(title= "mean_result")
 
 def accuratecy(d1,d2):
     d = (d1 == d2)
